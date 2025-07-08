@@ -744,6 +744,39 @@ export class IpcClient {
     return response?.models || [];
   }
 
+  // Claude Wrapper methods
+  public async startClaudeWrapper(options: any): Promise<{ success: boolean; error?: string }> {
+    return this.ipcRenderer.invoke("claude-wrapper:start", options);
+  }
+
+  public async sendClaudeCommand(command: string): Promise<any> {
+    return this.ipcRenderer.invoke("claude-wrapper:send-command", command);
+  }
+
+  public async sendClaudeInput(input: string): Promise<{ success: boolean; error?: string }> {
+    return this.ipcRenderer.invoke("claude-wrapper:send-input", input);
+  }
+
+  public async approveClaudePermission(): Promise<{ success: boolean; error?: string }> {
+    return this.ipcRenderer.invoke("claude-wrapper:approve-permission");
+  }
+
+  public async denyClaudePermission(): Promise<{ success: boolean; error?: string }> {
+    return this.ipcRenderer.invoke("claude-wrapper:deny-permission");
+  }
+
+  public async stopClaudeWrapper(): Promise<{ success: boolean; error?: string }> {
+    return this.ipcRenderer.invoke("claude-wrapper:stop");
+  }
+
+  public async getClaudeWrapperStatus(): Promise<{
+    running: boolean;
+    currentOutput?: string;
+    currentError?: string;
+  }> {
+    return this.ipcRenderer.invoke("claude-wrapper:status");
+  }
+
   // Listen for deep link events
   public onDeepLinkReceived(
     callback: (data: DeepLinkData) => void,

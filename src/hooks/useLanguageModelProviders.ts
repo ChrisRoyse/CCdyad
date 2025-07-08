@@ -16,6 +16,12 @@ export function useLanguageModelProviders() {
   });
 
   const isProviderSetup = (provider: string) => {
+    // Special handling for Claude Code - always ready (no auth required)
+    if (provider === "claude-code") {
+      return true;
+    }
+
+    // Standard API key-based setup for other providers
     const providerSettings = settings?.providerSettings[provider];
     if (queryResult.isLoading) {
       return false;

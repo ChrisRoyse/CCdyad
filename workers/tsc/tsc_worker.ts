@@ -13,14 +13,20 @@ import { SyncVirtualFileSystemImpl } from "../../shared/VirtualFilesystem";
 
 function loadLocalTypeScript(appPath: string): typeof import("typescript") {
   try {
-    // Try to load TypeScript from the project's node_modules
+    // Try to load TypeScript from the project's node_modules first
     const requirePath = require.resolve("typescript", { paths: [appPath] });
     const ts = require(requirePath);
     return ts;
   } catch (error) {
-    throw new Error(
-      `Failed to load TypeScript from ${appPath} because of ${error}`,
-    );
+    try {
+      // Fallback to Dyad's own TypeScript installation
+      const ts = require("typescript");
+      return ts;
+    } catch (fallbackError) {
+      throw new Error(
+        `Failed to load TypeScript from ${appPath} (${error}) and fallback failed (${fallbackError})`,
+      );
+    }
   }
 }
 

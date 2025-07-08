@@ -57,6 +57,7 @@ export function ModelPicker() {
     loadModels: loadLMStudioModels,
   } = useLocalLMSModels();
 
+
   // Load models when the dropdown opens
   useEffect(() => {
     if (open) {

@@ -375,6 +375,7 @@ ${componentSnippet}
           settings.selectedModel,
           settings,
           files,
+          appPath, // Pass app path as working directory for Claude Code
         );
 
         // Prepare message history for the AI
@@ -730,6 +731,7 @@ ${problemReport.problems
                   settings.selectedModel,
                   settings,
                   files,
+                  appPath, // Pass app path as working directory for Claude Code
                 );
 
                 const { fullStream } = await simpleStreamText({

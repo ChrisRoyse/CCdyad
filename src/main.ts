@@ -10,12 +10,28 @@ import { readSettings, writeSettings } from "./main/settings";
 import { handleSupabaseOAuthReturn } from "./supabase_admin/supabase_return_handler";
 import { handleDyadProReturn } from "./main/pro";
 import { IS_TEST_BUILD } from "./ipc/utils/test_utils";
+import { cleanupOldTempFiles } from "./ipc/utils/claude_code_wrapper";
 
 log.errorHandler.startCatching();
 log.eventLogger.startLogging();
 log.scope.labelPadding = false;
 
 const logger = log.scope("main");
+
+// Disable Electron security warnings in development
+if (!app.isPackaged) {
+  process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = '1';
+}
+
+// Suppress punycode deprecation warnings
+process.removeAllListeners('warning');
+process.on('warning', (warning) => {
+  if (warning.name === 'DeprecationWarning' && warning.message.includes('punycode')) {
+    // Suppress punycode deprecation warnings
+    return;
+  }
+  console.warn(warning.name, warning.message);
+});
 
 updateElectronApp(); // additional configuration options available
 
@@ -43,6 +59,9 @@ if (process.defaultApp) {
 
 export async function onReady() {
   await onFirstRunMaybe();
+  
+  // Clean up old Claude Code temp files
+  cleanupOldTempFiles();
 }
 
 app.whenReady().then(onReady);
@@ -115,6 +134,8 @@ const createWindow = () => {
       nodeIntegration: false,
       contextIsolation: true,
       preload: path.join(__dirname, "preload.js"),
+      webSecurity: true,
+      allowRunningInsecureContent: false,
       // transparent: true,
     },
     // backgroundColor: "#00000001",
@@ -131,6 +152,17 @@ const createWindow = () => {
   if (process.env.NODE_ENV === "development") {
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
+    // Disable autofill features to prevent console errors
+    mainWindow.webContents.once('did-finish-load', () => {
+      mainWindow?.webContents.executeJavaScript(`
+        // Disable autofill-related DevTools features
+        if (window.DevToolsAPI) {
+          window.DevToolsAPI.suppressAutofillErrors = true;
+        }
+      `).catch(() => {
+        // Ignore errors if DevToolsAPI is not available
+      });
+    });
   }
 };
 

@@ -22,7 +22,8 @@ export function createLoggedHandler(logger: log.LogFunctions) {
             `Error in ${fn.name}: args: ${JSON.stringify(args)}`,
             error,
           );
-          throw new Error(`[${channel}] ${error}`);
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          throw new Error(`[${channel}] ${errorMessage}`);
         }
       },
     );

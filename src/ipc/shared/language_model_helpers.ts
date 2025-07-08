@@ -147,6 +147,15 @@ export const MODEL_OPTIONS: Record<string, ModelOption[]> = {
       contextWindow: 1_000_000,
     },
   ],
+  "claude-code": [
+    {
+      name: "claude-code",
+      displayName: "Claude Code Max",
+      description: "Premium AI assistant with advanced code understanding and tool access",
+      maxOutputTokens: 8_000,
+      contextWindow: 200_000,
+    },
+  ],
 };
 
 export const PROVIDER_TO_ENV_VAR: Record<string, string> = {
@@ -154,6 +163,7 @@ export const PROVIDER_TO_ENV_VAR: Record<string, string> = {
   anthropic: "ANTHROPIC_API_KEY",
   google: "GEMINI_API_KEY",
   openrouter: "OPENROUTER_API_KEY",
+  "claude-code": "ANTHROPIC_API_KEY",
 };
 
 export const CLOUD_PROVIDERS: Record<
@@ -193,6 +203,12 @@ export const CLOUD_PROVIDERS: Record<
     displayName: "Dyad",
     websiteUrl: "https://academy.dyad.sh/settings",
     gatewayPrefix: "dyad/",
+  },
+  "claude-code": {
+    displayName: "Claude Code Max",
+    hasFreeTier: false,
+    websiteUrl: "https://claude.ai/code",
+    gatewayPrefix: "",
   },
 };
 
@@ -344,7 +360,7 @@ export async function getLanguageModels({
       }));
     } else {
       console.warn(
-        `Provider "${providerId}" is cloud type but not found in MODEL_OPTIONS.`,
+        `Provider "${providerId}" not found in MODEL_OPTIONS.`,
       );
     }
   }
