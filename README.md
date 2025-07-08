@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # dyad
 
 Dyad is a local, open-source AI app builder. It's fast, private and fully under your control — like Lovable, v0, or Bolt, but running right on your machine.
@@ -21,3 +22,6 @@ No sign-up required. Just download and go.
 **dyad** is open source (Apache 2.0-licensed).
 
 If you're interested in contributing to dyad, please read our [contributing](./CONTRIBUTING.md) doc.
+=======
+# CCdyad
+>>>>>>> 95210b91682d86dc0d3387760e5310d6fe39ecbc
